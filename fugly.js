@@ -1,8 +1,7 @@
 (function() {
-    var global = (function() { return this;} ());
-    fugly = global.fugly || {};
     
-    var 
+    var nodejs = (typeof exports !== "undefined"),
+    
         Token = {
             startCode : "<$",
             endCode : "$>",
@@ -10,9 +9,9 @@
         },
         
         ChunkType = {
-            code : { toString : function() { return "code"; } },
-            text : { toString : function() { return "text"; } },
-            expr : { toString : function() { return "expr"; } }
+            code : {},
+            text : {},
+            expr : {}
         },
         
         merge = function(o1, o2) {
@@ -69,7 +68,7 @@
         },
         
         buildExprPart = function(expr) {
-            return "this.write(" + expr + ");";
+            return "write(" + expr + ");";
         };
         
         buildTextPart = function(text) {
@@ -124,54 +123,53 @@
                 parts.push(buildPart(chunks[i]));
             }
             
-            template = new Function(parts.join(""));
+            template = new Function("view", "write", parts.join(""));
             
             return function() {
                 var context = {};
                 merge(context, this);
                 
                 var out = [];
-                context.write = function(text) {
+                template.call(null, context, function(text) {
                     out.push(text);
-                };
-                
-                template.call(context);
+                });
                 
                 return out.join("");
             };
-        };
-
-    fugly.Template = function(body) {
-    	
-        var 
-            context = {},
-            template;
+        },
         
-        this.context = function(key, value) {
-            if (arguments.length == 1) {
-                merge(context, key);
-            } else {
-                context[key] = value;
+        Template = function(body) {
+            var 
+                context = {},
+                template;
+            
+            this.context = function(key, value) {
+                if (arguments.length == 1) {
+                    merge(context, key);
+                } else {
+                    context[key] = value;
+                }
+            };
+            
+            this.render = function() {
+                return template.call(context);
+            };
+            
+            if (nodejs) {
+                this.call = this.render;
             }
+            
+            template = buildTemplate(body);
         };
-        
-        this.render = function() {
-            return template.call(context);
-        };
-        
-        template = buildTemplate(body);
-    };
     
-    fugly.Template.fromUrl = function(url, callback) {
-        var xhr = new XMLHttpRequest();
-        
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                callback(new fugly.Template(xhr.responseText));
-            }
-        };
-        
-        xhr.open("GET", url, true);
-        xhr.send(null);
-    };
+    if (nodejs) {
+        exports.Template = Template;
+        exports.compile = function(stream, context) {
+           var template = new Template(stream);
+           template.context(context);
+           return template;
+        };        
+    } else {
+        (function() { return this; }()).fugly = { Template : Template };
+    }
 }());
