@@ -138,17 +138,5 @@
             template = buildTemplate(body);
         };
         
-    if (typeof exports !== "undefined") {
-    	exports.Template = Template; 
-        exports.compile = function(stream, context) {
-           var template = new Template(stream);
-           var result = template.render(context);
-           return function() {
-        	   return result;
-           };
-        };
-        
-    } else {
-        (function() { return this; }()).fugly = { Template : Template };
-    }
+    (function() { return this; }()).fugly = { Template : Template };
 }());
