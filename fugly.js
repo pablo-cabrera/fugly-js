@@ -1,25 +1,18 @@
 (function() {
     
-    var nodejs = (typeof exports !== "undefined"),
-    
-        Token = {
-            startCode : "<$",
-            endCode : "$>",
-            startExpr : "<$="
+    var Token = {
+            startCode : "<%",
+            startCodeLen : 2,
+            endCode : "%>",
+            endCodeLen : 2,
+            startExpr : "<%=",
+            startExprLen : 3
         },
         
         ChunkType = {
             code : {},
             text : {},
             expr : {}
-        },
-        
-        merge = function(o1, o2) {
-            for (var a in o2) {
-                if (o2.hasOwnProperty(a)) {
-                    o1[a] = o2[a];
-                }
-            }
         },
         
         parse = function(body) {
@@ -37,7 +30,7 @@
                 if (currentChunk.type === ChunkType.text) {
                     pos = body.indexOf(Token.startCode);
                     if (pos > -1) {
-                        nextType = body.indexOf(Token.startExpr) === pos ? ChunkType.expr : ChunkType.code;
+                        nextType = body.substring(pos, pos + Token.startExprLen) == Token.startExpr ? ChunkType.expr : ChunkType.code;
                     }
                 } else {
                     pos = body.indexOf(Token.endCode);
@@ -48,7 +41,7 @@
                 
                 if (nextType) {
                     currentChunk.content = body.substr(0, pos);
-                    body = body.substr(pos + (nextType === ChunkType.expr ? 3 : 2)); 
+                    body = body.substr(pos + (nextType === ChunkType.expr ? Token.startExprLen : Token.startCodeLen)); 
                 } else {
                     currentChunk.content = body;
                     body = "";
@@ -100,7 +93,7 @@
                         ? c
                         : '\\u' + ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
                         }) + '"' : '"' + string + '"';
-                }
+                };
         }()),
 
         buildPart = function(chunk) {
@@ -123,12 +116,9 @@
                 parts.push(buildPart(chunks[i]));
             }
             
-            template = new Function("view", "write", parts.join(""));
+            template = new Function("view", "write", "with (view) { " + parts.join("") + " }");
             
-            return function() {
-                var context = {};
-                merge(context, this);
-                
+            return function(context) {
                 var out = [];
                 template.call(null, context, function(text) {
                     out.push(text);
@@ -139,37 +129,14 @@
         },
         
         Template = function(body) {
-            var 
-                context = {},
-                template;
+            var template;
             
-            this.context = function(key, value) {
-                if (arguments.length == 1) {
-                    merge(context, key);
-                } else {
-                    context[key] = value;
-                }
+            this.render = function(context) {
+                return template(context);
             };
-            
-            this.render = function() {
-                return template.call(context);
-            };
-            
-            if (nodejs) {
-                this.call = this.render;
-            }
             
             template = buildTemplate(body);
         };
-    
-    if (nodejs) {
-        exports.Template = Template;
-        exports.compile = function(stream, context) {
-           var template = new Template(stream);
-           template.context(context);
-           return template;
-        };        
-    } else {
-        (function() { return this; }()).fugly = { Template : Template };
-    }
+        
+    (function() { return this; }()).fugly = { Template : Template };
 }());
