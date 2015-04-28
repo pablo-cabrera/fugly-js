@@ -1,16 +1,28 @@
 {
-  "author": "Pablo José Cabrera Muñoz <pablo.cabrera.munoz@gmail.com>",
-  "name": "fugly-js",
-  "description": "Fucking ugly template engine",
-  "version": "0.0.3",
-  "homepage": "https://github.com/pablo-cabrera/fugly-js",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/pablo-cabrera/fugly-js.git"
-  },
-  "engines": {
-    "node": ">= 0.4.1"
-  },
-  "dependencies": {},
-  "devDependencies": {}
+    "author": "Pablo José Cabrera Muñoz <pablo.cabrera.munoz@gmail.com>",
+    "name": "fugly-js",
+    "description": "Fucking ugly template engine",
+    "version": "0.0.4",
+    "homepage": "https://github.com/pablo-cabrera/fugly-js",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/pablo-cabrera/fugly-js.git"
+    },
+    "main": "lib/fugly.js",
+    "devDependencies": {
+        "gabarito": "0.0.1-alpha.002",
+        "grunt-gabarito": "0.0.1-alpha.002",
+        "colors": "*",
+        "grunt": "~0.4.0",
+        "grunt-contrib-jshint": "*",
+        "grunt-contrib-uglify": "*",
+        "grunt-contrib-yuidoc": "~0.4.0",
+        "grunt-istanbul": "*",
+        "grunt-jscs": "^1.5.0",
+        "grunt-contrib-copy": "*",
+        "grunt-contrib-clean": "*"
+    },
+    "scripts": {
+        "test": "grunt"
+    }
 }

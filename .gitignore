@@ -1,0 +1,10 @@
+build/
+dist/
+docs/
+test/coverage/
+node_modules/
+npm-debug.log
+.project
+.settings
+*.sublime-project
+*.sublime-workspace
