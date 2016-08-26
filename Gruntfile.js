@@ -24,7 +24,7 @@ module.exports = function (grunt) {
                 ],
 
                 options: {
-                    config: ".gabarito-dev.rc"
+                    config: ".gabarito.rc"
                 }
             },
 

@@ -31,6 +31,12 @@
             var out = new fugly.Template(template).render();
         },
 
+        "text function should convert the string to its entities equivalent":
+        function () {
+            var template = "<$= text('&') $>";
+            var out = new fugly.Template(template).render();
+        },
+
         dummy : undefined
 
     });
