@@ -9,11 +9,13 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON("package.json"),
 
         meta: {
-            banner: "/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - " +
-                "<%= grunt.template.today(\"yyyy-mm-dd\") %>\n" +
-                "<%= pkg.homepage ? \"* \" + pkg.homepage + \"\n\": \"\" %>" +
-                "* Copyright (c) <%= grunt.template.today(\"yyyy\") %> <%= pkg.author.name %>;" +
-                " Licensed <%= _.pluck(pkg.licenses, \"type\").join(\", \") %> */"
+            banner:
+                "/*! " +
+                "<%= pkg.title || pkg.name %> v<%= pkg.version %> | " +
+                "(c) <%= grunt.template.today(\"yyyy\") %> " +
+                "<%= pkg.author.name %> | " +
+                " Available via <%= pkg.license %> license " +
+                "*/"
         },
 
         test: {
@@ -37,6 +39,10 @@ module.exports = function (grunt) {
         },
 
         uglify: {
+            options: {
+                banner: "<%= meta.banner %>\n"
+            },
+
             dist: {
                 src: "lib/fugly.js",
                 dest: "dist/fugly.js"

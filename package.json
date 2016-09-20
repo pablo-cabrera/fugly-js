@@ -8,10 +8,11 @@
         "type": "git",
         "url": "git://github.com/pablo-cabrera/fugly-js.git"
     },
+  "license": "MIT",
     "main": "lib/fugly.js",
     "devDependencies": {
-        "gabarito": "0.0.1-alpha.002",
-        "grunt-gabarito": "0.0.1-alpha.002",
+        "gabarito": "0.0.1-alpha.006",
+        "grunt-gabarito": "0.0.1-alpha.006",
         "colors": "*",
         "grunt": "~0.4.0",
         "grunt-contrib-jshint": "*",
