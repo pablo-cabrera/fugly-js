@@ -2,28 +2,30 @@
     "author": "Pablo José Cabrera Muñoz <pablo.cabrera.munoz@gmail.com>",
     "name": "fugly-js",
     "description": "Fucking ugly template engine",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "homepage": "https://github.com/pablo-cabrera/fugly-js",
     "repository": {
         "type": "git",
         "url": "git://github.com/pablo-cabrera/fugly-js.git"
     },
-  "license": "MIT",
+    "license": "MIT",
     "main": "lib/fugly.js",
     "devDependencies": {
-        "gabarito": "0.0.1-alpha.006",
-        "grunt-gabarito": "0.0.1-alpha.006",
         "colors": "*",
+        "gabarito": "0.0.1",
         "grunt": "~0.4.0",
+        "grunt-contrib-clean": "*",
+        "grunt-contrib-copy": "*",
         "grunt-contrib-jshint": "*",
         "grunt-contrib-uglify": "*",
         "grunt-contrib-yuidoc": "~0.4.0",
-        "grunt-istanbul": "*",
-        "grunt-jscs": "^1.5.0",
-        "grunt-contrib-copy": "*",
-        "grunt-contrib-clean": "*"
+        "grunt-gabarito": "0.0.5",
+        "grunt-jscs": "^1.5.0"
     },
     "scripts": {
         "test": "grunt"
+    },
+    "dependencies": {
+        "grunt-istanbul": "^0.7.2"
     }
 }

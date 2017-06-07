@@ -18,7 +18,7 @@ module.exports = function (grunt) {
                 "*/"
         },
 
-        test: {
+        gabarito: {
             dev: {
                 src: [
                     "lib/fugly.js",
@@ -26,7 +26,7 @@ module.exports = function (grunt) {
                 ],
 
                 options: {
-                    config: ".gabarito.rc"
+                    environments: ["node", "phantom"]
                 }
             },
 
@@ -99,43 +99,7 @@ module.exports = function (grunt) {
             }
         },
 
-        instrument: {
-            files: "lib/**/*.js",
-            options: {
-                lazy: true,
-                basePath: "test/coverage/instrument/"
-            }
-        },
-
-        storeCoverage: {
-            options: {
-                dir: "test/coverage/reports"
-            }
-        },
-
-        makeReport: {
-            src: "test/coverage/reports/**/*.json",
-            options: {
-                type: "lcov",
-                dir: "test/coverage/reports",
-                print: "detail"
-            }
-        },
-
-        copy: {
-            toInstrumented: {
-                files: [
-                    {
-                        expand: true,
-                        src: ["test/cases/**"],
-                        dest: "test/coverage/instrument"
-                    }
-                ]
-            }
-        },
-
         clean: [
-            "test/coverage",
             "docs",
             "dist"
         ]
@@ -148,15 +112,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-yuidoc");
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-contrib-clean");
-    grunt.loadNpmTasks("grunt-istanbul");
     grunt.loadNpmTasks("grunt-gabarito");
     grunt.loadNpmTasks("grunt-jscs");
 
-    grunt.registerTask("default", ["clean", "jshint", "jscs", "test:dev"]);
+    grunt.registerTask("default", ["clean", "jshint", "jscs", "gabarito"]);
 
     grunt.registerTask("build", ["clean", "default", "uglify", "yuidoc"]);
 
-    grunt.registerTask("ci", ["clean", "jshint", "instrument",
-            "copy:toInstrumented", "test:withCoverage", "storeCoverage",
-            "makeReport"]);
 };
