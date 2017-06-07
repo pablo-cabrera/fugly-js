@@ -24,8 +24,5 @@
     },
     "scripts": {
         "test": "grunt"
-    },
-    "dependencies": {
-        "grunt-istanbul": "^0.7.2"
     }
 }
