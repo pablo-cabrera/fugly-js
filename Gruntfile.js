@@ -19,22 +19,13 @@ module.exports = function (grunt) {
         },
 
         gabarito: {
-            dev: {
-                src: [
-                    "lib/fugly.js",
-                    "test/cases/**/*.js"
-                ],
+            src: [
+                "lib/fugly.js",
+                "test/cases/**/*.js"
+            ],
 
-                options: {
-                    environments: ["node", "phantom"]
-                }
-            },
-
-            withCoverage: {
-                src: [
-                    "lib/fugly.js",
-                    "test/cases/**/*.js"
-                ]
+            options: {
+                environments: ["node", "phantom"]
             }
         },
 
