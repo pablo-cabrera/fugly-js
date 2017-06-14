@@ -2,7 +2,7 @@
     "author": "Pablo José Cabrera Muñoz <pablo.cabrera.munoz@gmail.com>",
     "name": "fugly-js",
     "description": "Fucking ugly template engine",
-    "version": "0.0.5",
+    "version": "0.1.1",
     "homepage": "https://github.com/pablo-cabrera/fugly-js",
     "repository": {
         "type": "git",
