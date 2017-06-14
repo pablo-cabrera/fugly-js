@@ -13,8 +13,11 @@ Templates are evaluated within its own function scope, so any variables created 
 
 Packed with it, there is the **entitify** function that transforms character strings to its equivalent SGML character entity. This function runs through arrays and objects recursively, if it encounters values other than object, arrays or strings, it returns the value itself. **Its not cyclic safe**. This helps to write safe strings within html templates.
 
-Thats all there is to it. Below there are some sample usages.
+Fugly-js offers also **buffer** support in case anyone would want to store generated strings instead of writing out to the output. To start buffering the output one must acquire a buffer calling the **collect** function. The buffer will start collecting all generated output from the template, to get the buffer contents you may call `buffer.toString()`. To finalize the buffer and restore the previous active buffer the `buffer.end()` method may be called. This method will also return the buffer contents. Multiple buffers may be created but they **must** be closed in reverse order that they were created. At the end of the template rendering, all created buffers **will be closed**.
 
+That's all there is to it. Below there are some sample usages.
+
+Simple template without js blocks
 ```js
 var body = "This is a template without js blocks";
 var template = new fugly.Template(body);
@@ -25,6 +28,7 @@ var out = template.render(context);
 console.log(out); // "This is a template without js blocks"
 ```
 
+Using js blocks to write to the output
 ```js
 var body =
     "This fugly counts up to three\n" +
@@ -48,6 +52,7 @@ This fugly counts up to three
 */
 ```
 
+Using context variables
 ```js
 var body =
     "This fugly uses the context variable\n" +
@@ -67,6 +72,7 @@ yomomma
 */
 ```
 
+Using expression blocks
 ```js
 var body =
     "This fugly uses the expression\n" +
@@ -86,6 +92,7 @@ yomomma
 */
 ```
 
+Calling an internal function
 ```js
 var body =
     "This fugly calls an external function\n" +
@@ -105,6 +112,7 @@ yomomma
 */
 ```
 
+SGML entitified strings
 ```js
 var body =
     "This fugly uses the entitify function\n" +
@@ -124,4 +132,64 @@ Yo momma is so @#$&#38;$# fat!
 */
 ```
 
+Using a single buffer
+```js
+var body =
+    "<$ var buffer = collect(); $>" +
+    "some content" +
+    "<$ view.bufferContents = buffer.end(); $>";
 
+var template = new fugly.Template(body);
+var context = {};
+var out = template.render(context);
+console.log(out); // empty string
+console.log(context.bufferContents); // "some content"
+```
+
+Buffers within a function
+```js
+var body =
+    "<$" +
+    "var bufferFunction = function () {\n" +
+    "    var buffer = collect();" +
+    "    $>" +
+    "This is a function that uses buffer to collect generated content<$" +
+    "    return buffer.end();" +
+    "};" +
+    "$>"+
+    "<$= bufferFunction() $>";
+
+var template = new fugly.Template(body);
+var context = {};
+var out = template.render(context);
+console.log(out); // "This is a function that uses buffer to collect generated content"
+```
+Multiple buffers
+```js
+var body =
+    "<$" +
+    "var bufferFunction = function () {" +
+    "    var buffer = collect();" +
+    "    $>" +
+    "This is a function that uses buffer to collect generated content\n" +
+    "<$= innerBufferFunction() $><$" +
+    "    return buffer.end();" +
+    "};" +
+    "var innerBufferFunction = function () {" +
+    "    var buffer = collect();" +
+    "    $>" +
+    "This is another function that uses a buffer aswell<$" +
+    "    return buffer.end();" +
+    "};" +
+    "$>"+
+    "<$= bufferFunction() $>";
+
+var template = new fugly.Template(body);
+var context = {};
+var out = template.render(context);
+console.log(out);
+/*
+This is a function that uses buffer to collect generated content
+This is another function that uses a buffer aswell
+*/
+```
